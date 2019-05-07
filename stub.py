@@ -16,7 +16,7 @@ class Learner(object):
 		self.last_state  = None
 		self.last_action = None
 		self.last_reward = None
-		self.alpha = 0.6
+		self.alpha = 0.8
 		self.epsilon = 0.001
 		self.lastV = None
 		self.g = npr.choice([1,4])
@@ -24,9 +24,9 @@ class Learner(object):
 		self.stateSeq = []
 		self.rewards = []
 		self.Q_table = {}
-		for i in range(-18,18):
-			for j in range(-8,30):
-				for bot in range(-5,18):
+		for i in range(-14,14):
+			for j in range(-3,14):
+				for bot in range(-3,10):
 					for vel in range(-8,8):
 						for g in range(1,5,3):
 							self.Q_table[(i,j,bot,vel,g)]=[0,0]
@@ -94,7 +94,7 @@ class Learner(object):
 
 		# here is where I need to update the various tables
 		horzDist = state['tree']['dist'] 
-		vertDist = state['monkey']['bot'] - state['tree']['bot']
+		vertDist = state['monkey']['top'] - state['tree']['top']
 		botDist = state['monkey']['bot']
 		vel = state['monkey']['vel']
 		
@@ -103,12 +103,12 @@ class Learner(object):
 			velbin = vel // 40
 			vertbin = vertDist // 30
 		else: 
-			horzbin = horzDist// 25 #self.low_grav_bins(horzDist)
+			horzbin = self.low_grav_bins(horzDist)
 			velbin = vel // 20
-			vertbin = vertDist // 20
+			vertbin = vertDist // 40
 		
 
-		botbin = botDist // 20
+		botbin = botDist // 40
 		
 		# else:
 		# 	if horzDist >  
@@ -188,11 +188,10 @@ if __name__ == '__main__':
 	hist = []
 
 	# Run games. 
-	gravity = run_games(agent, hist, 500, 1)
-	print(np.mean(hist))
-	print(hist)
+	gravity = run_games(agent, hist, 200, 1)
+
 	# np.save('nograv',np.array(gravity))
 	# Save history. 
-	np.save('histcomp8',np.array(hist))
+	np.save('histcomp6',np.array(hist))
 
 
